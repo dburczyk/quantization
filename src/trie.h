@@ -4,10 +4,10 @@
 #define ALPHABET_SIZE 4
 
 typedef struct node node;
-struct node{
-    node *children[ALPHABET_SIZE];
-    node *parent;
-    int set_number;
+struct node {
+  node *children[ALPHABET_SIZE];
+  node *parent;
+  int set_number;
 };
 
 node *root;
