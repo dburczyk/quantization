@@ -3,47 +3,47 @@
 
 #define ALPHABET_SIZE 4
 
-typedef struct node node;
-struct node {
-  node *children[ALPHABET_SIZE];
-  node *parent;
-  int set_number;
+typedef struct Node Node;
+struct Node {
+  Node *children_[ALPHABET_SIZE];
+  Node *parent_;
+  int set_number_;
   //int declaration;
 };
 
-node *root;
+Node *root;
 
-node *create_node() {
-  node *v = malloc(sizeof(node));
+Node *CreateNode() {
+  Node *v = malloc(sizeof(Node));
   if (v == NULL) {
     exit(1);
     return v;
   }
-  memset(v, 0, sizeof(node));
+  memset(v, 0, sizeof(Node));
   return v;
 }
 
-void destroy_node(node *v) {
+void DestroyNode(Node *v) {
   if (v == NULL)return;
-  for (int i = 0; i < ALPHABET_SIZE; i++)destroy_node(v->children[i]);
+  for (int i = 0; i < ALPHABET_SIZE; i++)DestroyNode(v->children_[i]);
   free(v);
   return;
 }
 
-node *move_down(node *v, int digit) {
+Node *MoveDown(Node *v, int digit) {
   if (v == NULL)return NULL;
-  if (v->children[digit] == NULL) {
-    v->children[digit] = create_node();
-    v->children[digit]->parent = v;
+  if (v->children_[digit] == NULL) {
+    v->children_[digit] = CreateNode();
+    v->children_[digit]->parent_ = v;
     //printf("%d %d %d\n",(int)root, (int)v, (int)(v->parent));
   }
   //push_down(v);
-  node *child = v->children[digit];
-  if (v->set_number == 0)child->set_number = 0;
+  Node *child = v->children_[digit];
+  if (v->set_number_ == 0)child->set_number_ = 0;
   return child;
 }
 
-void initialize_trie() {
-  root = create_node();
+void InitializeTrie() {
+  root = CreateNode();
   return;
 }

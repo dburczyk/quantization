@@ -1,7 +1,7 @@
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef PARSER_H_
+#define PARSER_H_
 
 //returns 1 if met EOF, else 0
-int parse_line();
+int ParseLine();
 
 #endif

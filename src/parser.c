@@ -7,7 +7,7 @@
 
 #define COMMAND_SIZE 8
 
-int scan_character(char *c) {
+int ScanCharacter(char *c) {
   int a = getchar();
   if (a == -1)return 0;
   else {
@@ -16,13 +16,13 @@ int scan_character(char *c) {
   }
 }
 
-node *get_history() {
+Node *GetHistory() {
   char next_char = ' ';
-  node *current_node = root;
-  while (scan_character(&next_char) == 1) {
+  Node *current_node = root;
+  while (ScanCharacter(&next_char) == 1) {
     int digit = next_char - '0';
     if (digit >= 0 && digit < ALPHABET_SIZE) {
-      current_node = move_down(current_node, digit);
+      current_node = MoveDown(current_node, digit);
     } else {
       ungetc(next_char, stdin);
       if (current_node == root)return NULL;
@@ -32,10 +32,10 @@ node *get_history() {
   return NULL;
 }
 //returns 0 if energy is invalid
-unsigned long long get_energy() {
+unsigned long long GetEnergy() {
   unsigned long long answer = 0;
   char next_char = ' ';
-  while (scan_character(&next_char) == 1) {
+  while (ScanCharacter(&next_char) == 1) {
     if (next_char - '0' >= 0 && next_char - '0' < 10) {
       unsigned long long digit = next_char - '0';
       //when number is bigger than 2^64-1
@@ -53,23 +53,23 @@ unsigned long long get_energy() {
   return answer;
 }
 //returns 1 if met EOF, else 0
-int delete_line() {
+int DeleteLine() {
   char c;
-  while (scan_character(&c) == 1) {
+  while (ScanCharacter(&c) == 1) {
     if (c == '\n')return 0;
   }
   return 1;
 }
 
 //returns 1 if met EOF, else 0
-int parse_line() {
+int ParseLine() {
   char command[COMMAND_SIZE];
-  if (scan_character(command) <= 0)return 1;
-  else if (command[0] == '#')return delete_line();
+  if (ScanCharacter(command) <= 0)return 1;
+  else if (command[0] == '#')return DeleteLine();
   else if (command[0] == '\n')return 0;
 
   for (int i = 1; i < COMMAND_SIZE; i++) {
-    if (scan_character(command + i) <= 0) {
+    if (ScanCharacter(command + i) <= 0) {
       fprintf(stderr, "ERROR\n");
       return 1;
     }
@@ -81,63 +81,63 @@ int parse_line() {
   }
   //printf("tu\n");
   if (memcmp(command, "DECLARE ", 8 * sizeof(char)) == 0) {
-    node *history = get_history();
+    Node *history = GetHistory();
     if (history == NULL) {
       fprintf(stderr, "ERROR\n");
-      return delete_line();
+      return DeleteLine();
     }
     char next_char;
-    if (scan_character(&next_char) <= 0) {
+    if (ScanCharacter(&next_char) <= 0) {
       fprintf(stderr, "ERROR\n");
       return 1;
     }
     if (next_char != '\n') {
       fprintf(stderr, "ERROR\n");
-      return delete_line();
+      return DeleteLine();
     } else {
 
-      declare(history);
+      Declare(history);
       printf("OK\n");
       return 0;
     }
   } else if (memcmp(command, "REMOVE ", 7 * sizeof(char)) == 0) {
-    node *history = get_history();
+    Node *history = GetHistory();
     if (history == NULL) {
       fprintf(stderr, "ERROR\n");
-      return delete_line();
+      return DeleteLine();
     }
     char next_char;
-    if (scan_character(&next_char) <= 0) {
+    if (ScanCharacter(&next_char) <= 0) {
       fprintf(stderr, "ERROR\n");
       return 1;
     }
     if (next_char != '\n') {
       fprintf(stderr, "ERROR\n");
-      return delete_line();
+      return DeleteLine();
     } else {
-      remove_history(history);
+      RemoveHistory(history);
       printf("OK\n");
       return 0;
     }
   } else if (memcmp(command, "VALID ", 6 * sizeof(char)) == 0) {
-    node *history = get_history();
+    Node *history = GetHistory();
     if (history == NULL) {
       fprintf(stderr, "ERROR\n");
-      return delete_line();
+      return DeleteLine();
     }
     char next_char;
-    if (scan_character(&next_char) <= 0) {
+    if (ScanCharacter(&next_char) <= 0) {
       fprintf(stderr, "ERROR\n");
       return 1;
     }
     if (next_char != '\n') {
       fprintf(stderr, "ERROR\n");
-      return delete_line();
+      return DeleteLine();
     } else {
-      if (valid(history) == -1) {
+      if (Valid(history) == -1) {
         fprintf(stderr, "ERROR\n");
         return 0;
-      } else if (valid(history) == 0) {
+      } else if (Valid(history) == 0) {
         printf("NO\n");
       } else {
         printf("YES\n");
@@ -145,102 +145,102 @@ int parse_line() {
       return 0;
     }
   } else if (memcmp(command, "ENERGY ", 7 * sizeof(char)) == 0) {
-    node *history = get_history();
+    Node *history = GetHistory();
     if (history == NULL) {
       fprintf(stderr, "ERROR\n");
-      return delete_line();
+      return DeleteLine();
     }
     char next_char;
-    if (scan_character(&next_char) <= 0) {
+    if (ScanCharacter(&next_char) <= 0) {
       fprintf(stderr, "ERROR\n");
       return 1;
     }
     if (next_char == '\n') {
-      if (valid(history) != 1) {
+      if (Valid(history) != 1) {
         fprintf(stderr, "ERROR\n");
         return 0;
       }
-      if (energy_check(history) != 0) {
-        printf("%llu\n", energy_check(history));
+      if (EnergyCheck(history) != 0) {
+        printf("%llu\n", EnergyCheck(history));
         return 0;
       } else {
         fprintf(stderr, "ERROR\n");
         return 0;
       }
     } else if (next_char == ' ') {
-      if (valid(history) != 1) {
+      if (Valid(history) != 1) {
         fprintf(stderr, "ERROR\n");
-        return delete_line();
+        return DeleteLine();
       }
-      unsigned long long new_energy = get_energy();
+      unsigned long long new_energy = GetEnergy();
       if (new_energy == 0) {
         fprintf(stderr, "ERROR\n");
-        return delete_line();
+        return DeleteLine();
       }
-      if (scan_character(&next_char) <= 0) {
+      if (ScanCharacter(&next_char) <= 0) {
         fprintf(stderr, "ERROR\n");
         return 1;
       }
       if (next_char == '\n') {
         if (new_energy == 0)fprintf(stderr, "ERROR\n");
         else {
-          energy_assign(history, new_energy);
+          EnergyAssign(history, new_energy);
           printf("OK\n");
         }
         return 0;
       } else {
         fprintf(stderr, "ERROR\n");
-        return delete_line();
+        return DeleteLine();
       }
     } else {
       fprintf(stderr, "ERROR\n");
-      return delete_line();
+      return DeleteLine();
     }
   }
 
   if (memcmp(command, "EQUAL ", 6 * sizeof(char)) == 0) {
-    node *history_a = get_history();
+    Node *history_a = GetHistory();
     if (history_a == NULL) {
       fprintf(stderr, "ERROR\n");
-      return delete_line();
+      return DeleteLine();
     }
     char next_char;
-    if (scan_character(&next_char) <= 0) {
+    if (ScanCharacter(&next_char) <= 0) {
       fprintf(stderr, "ERROR\n");
       return 1;
     }
     if (next_char == ' ') {
-      if (valid(history_a) != 1) {
+      if (Valid(history_a) != 1) {
         fprintf(stderr, "ERROR\n");
-        return delete_line();
+        return DeleteLine();
       }
-      node *history_b = get_history();
+      Node *history_b = GetHistory();
       if (history_b == NULL) {
         fprintf(stderr, "ERROR\n");
-        return delete_line();
+        return DeleteLine();
       }
-      if (scan_character(&next_char) <= 0) {
+      if (ScanCharacter(&next_char) <= 0) {
         fprintf(stderr, "ERROR\n");
         return 1;
       }
       if (next_char == '\n') {
-        if (valid(history_b) != 1) {
+        if (Valid(history_b) != 1) {
           fprintf(stderr, "ERROR\n");
           return 0;
         }
-        if (equal(history_a, history_b) == 1)fprintf(stderr, "ERROR\n");
+        if (Equal(history_a, history_b) == 1)fprintf(stderr, "ERROR\n");
         else printf("OK\n");
         return 0;
       } else {
         fprintf(stderr, "ERROR\n");
-        return delete_line();
+        return DeleteLine();
       }
     } else {
       fprintf(stderr, "ERROR\n");
-      return delete_line();
+      return DeleteLine();
     }
   } else {
     fprintf(stderr, "ERROR\n");
-    return delete_line();
+    return DeleteLine();
   }
 }

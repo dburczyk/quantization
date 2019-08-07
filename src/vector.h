@@ -1,10 +1,18 @@
-#ifndef QUANTIZATION_VECTOR_H
-#define QUANTIZATION_VECTOR_H
+#ifndef VECTOR_H_
+#define VECTOR_H_
+
+#include <string.h>
 
 typedef struct Vector Vector;
 struct Vector {
+
   void **data_;
-  int size_;
+
+  size_t capacity_;
+
+  size_t size_;
 };
 
-#endif //QUANTIZATION_VECTOR_H
+Vector *NewVector();
+
+#endif //VECTOR_H_

@@ -1,15 +1,15 @@
-#ifndef FIND_AND_UNION_H
-#define FIND_AND_UNION_H
+#ifndef FIND_AND_UNION_H_
+#define FIND_AND_UNION_H_
 
 int *set_table;
 unsigned long long *energy;
 
-int new_set();
+int NewSet();
 
-int find_set(int s);
+int FindSet(int s);
 
-void union_set(int s, int t);
+void UnionSet(int s, int t);
 
-void initialize_find_and_union();
+void InitializeFindAndUnion();
 
 #endif

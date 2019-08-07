@@ -1,23 +1,23 @@
-#ifndef TRIE_H
-#define TRIE_H
+#ifndef TRIE_H_
+#define TRIE_H_
 
 #define ALPHABET_SIZE 4
 
-typedef struct node node;
-struct node {
-  node *children[ALPHABET_SIZE];
-  node *parent;
-  int set_number;
+typedef struct Node Node;
+struct Node {
+  Node *children_[ALPHABET_SIZE];
+  Node *parent_;
+  int set_number_;
 };
 
-node *root;
+Node *root;
 
-node *create_node();
+Node *CreateNode();
 
-void destroy_node(node *v);
+void DestroyNode(Node *v);
 
-node *move_down(node *v, int digit);
+Node *MoveDown(Node *v, int digit);
 
-void initialize_trie();
+void InitializeTrie();
 
 #endif

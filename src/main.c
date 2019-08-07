@@ -6,10 +6,10 @@
 #include "parser.h"
 
 int main() {
-  initialize_find_and_union();
-  initialize_trie();
-  while (parse_line() == 0);
-  destroy_node(root);
+  InitializeFindAndUnion();
+  InitializeTrie();
+  while (ParseLine() == 0);
+  DestroyNode(root);
   free(set_table);
   free(energy);
   return 0;
